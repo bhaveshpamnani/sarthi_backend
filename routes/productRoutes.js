@@ -6,6 +6,9 @@ const upload = require('../config/multer');
 // Create Product
 router.post('/add', productController.createProduct);
 
+// Get popular product
+router.get('/popular',productController.getPopularProducts);
+
 // Get All Products
 router.get("/", productController.getAllProducts);
 
@@ -20,7 +23,6 @@ router.get('/categoryProduct/:id',productController.getProductsByCategory);
 
 // Delete Product
 router.delete("/:id", productController.deleteProduct);
-
 
 // Upload Image
 router.post('/upload-image/:id', upload.single('image'),productController.uploadImage);

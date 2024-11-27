@@ -89,7 +89,7 @@ exports.getProductsByUser =  async (req, res) => {
   try {
     // Find the wishlist by userId and populate the product details
     const wishlist = await Wishlist.findOne({ user: userId })
-      .populate('items.product', 'name discountPrice images brand')  // Populate only needed fields from the Product model
+      .populate('items.product', 'name discountPrice images brand discount ')  // Populate only needed fields from the Product model
       .exec();
 
     if (!wishlist) {
@@ -101,12 +101,16 @@ exports.getProductsByUser =  async (req, res) => {
       wishlist: wishlist.items.map(item => ({
         productId: item.product._id,
         name: item.product.name,
-        price: item.product.price,
-        image: item.product.image,
+        brand:item.product.brand,
+        discount: item.product.discount,
+        price: item.product.discountPrice,
+        image: item.product.images,
         addedAt: item.addedAt,
         isInWishlist: item.isInWishlist
-      }))
+      })
+    )
     });
+    console.log(wishlist);
   } catch (error) {
     console.error('Error fetching wishlist:', error);
     res.status(500).json({ message: 'An error occurred while fetching the wishlist' });

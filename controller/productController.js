@@ -33,6 +33,25 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+// Fetch popular products
+exports.getPopularProducts = async (req, res) => {
+  try {
+      const popularProducts = await Product.find({ averageRating: { $gte: 3.5 } }) // Rating filter
+          .sort({ averageRating: -1 }) // Sort by highest rating
+          .limit(10); // Limit to top 10
+      res.status(200).json({
+          success: true,
+          data: popularProducts,
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({
+          success: false,
+          message: 'Error fetching popular products',
+      });
+  }
+};
+
 // Get All Products with populated category details
 exports.getAllProducts = async (req, res) => {
   try {
