@@ -5,7 +5,7 @@ exports.createProduct = async (req, res) => {
   try {
     const { name, description, category, brand, discountPrice,
       mrpPrice,
-      discount, stock, sku, images, sizes, colors, fabric, productReturnDay, isFeatured, isAvailable } = req.body;
+      discount, stock, sku, images, sizes, colors, fabric, productReturnDay, isFeatured, isAvailable,ratings } = req.body;
 
     const newProduct = new Product({
       name,
@@ -24,6 +24,7 @@ exports.createProduct = async (req, res) => {
       productReturnDay,
       isFeatured,
       isAvailable,
+      ratings
     });
 
     const savedProduct = await newProduct.save();
@@ -36,21 +37,33 @@ exports.createProduct = async (req, res) => {
 // Fetch popular products
 exports.getPopularProducts = async (req, res) => {
   try {
-      const popularProducts = await Product.find({ averageRating: { $gte: 3.5 } }) // Rating filter
-          .sort({ averageRating: -1 }) // Sort by highest rating
-          .limit(10); // Limit to top 10
-      res.status(200).json({
-          success: true,
-          data: popularProducts,
+    // Adjusted query to reference nested ratings.averageRating
+    const popularProducts = await Product.find({ 'ratings.averageRating': { $gte: 3.5 } })  // Rating filter
+      .sort({ 'ratings.averageRating': -1 })  // Sort by highest rating
+      .limit(10);  // Limit to top 10
+    
+    // Check if products were found
+    if (popularProducts.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No popular products found',
       });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: popularProducts,
+    });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({
-          success: false,
-          message: 'Error fetching popular products',
-      });
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching popular products',
+    });
   }
 };
+
+
 
 // Get All Products with populated category details
 exports.getAllProducts = async (req, res) => {
@@ -65,9 +78,11 @@ exports.getAllProducts = async (req, res) => {
 exports.getProductsByCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
-    console.log(categoryId);
     
     const products = await Product.find({ category: categoryId });
+
+
+    console.log(products);
 
     if (!products.length) {
       return res.status(404).json({ message: "No products found for this category" });

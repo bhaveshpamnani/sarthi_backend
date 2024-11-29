@@ -105,12 +105,12 @@ exports.getProductsByUser =  async (req, res) => {
         discount: item.product.discount,
         price: item.product.discountPrice,
         image: item.product.images,
+        _id:item.product._id,
         addedAt: item.addedAt,
         isInWishlist: item.isInWishlist
       })
     )
     });
-    console.log(wishlist);
   } catch (error) {
     console.error('Error fetching wishlist:', error);
     res.status(500).json({ message: 'An error occurred while fetching the wishlist' });
