@@ -21,7 +21,7 @@ exports.signup = async (req,res)=>{
         const user = new User({name,email,password,phone});
 
         await user.save();
-        res.status(201).json({message:"User created successfully"});
+        res.status(201).json({user: user,message:"User created successfully"});
     }catch(error){
         console.log(error);
         res.status(500).json({message:"Internal Server Error : ",error});
@@ -48,7 +48,7 @@ exports.login = async(req,res)=>{
         //Genrate token 
         const token = jwt.sign({id:user._id},JWT_SECRET);
 
-        res.status(201).json({message:"Login SuccesFully",token});
+        res.status(201).json({user:user,message:"Login SuccesFully",token});
     }catch(error){
         console.log(error);
         res.status(500).json({message:"Internal Server Error : ",error});
