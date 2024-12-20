@@ -20,18 +20,19 @@ const cartSchema = new mongoose.Schema({
       },
       inCart: {
         type: Boolean,
-        default: true  // Indicates that the product is currently in the cart
+        default: true
       }
     }
   ],
   totalQuantity: {
     type: Number,
-    default: 0  // Auto-updated based on the items in the cart
+    default: 0
   },
   totalPrice: {
     type: Number,
-    default: 0  // Auto-updated based on item prices and quantities
+    default: 0
   }
 }, { timestamps: true });
+
 
 module.exports = mongoose.model('Cart', cartSchema);
