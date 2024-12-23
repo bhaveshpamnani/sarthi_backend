@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 
 const cartSchema = new mongoose.Schema({
@@ -18,6 +19,14 @@ const cartSchema = new mongoose.Schema({
         required: true, 
         min: 1 
       },
+      size: {   // Size field added here
+        type: String,
+        required: true  // Ensure size is required
+      },
+      color: {   // color field added here
+        type: String,
+        required: true  // Ensure size is required
+      },
       inCart: {
         type: Boolean,
         default: true
@@ -33,6 +42,5 @@ const cartSchema = new mongoose.Schema({
     default: 0
   }
 }, { timestamps: true });
-
 
 module.exports = mongoose.model('Cart', cartSchema);
