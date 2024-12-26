@@ -78,11 +78,9 @@ exports.addToCart = async (req, res) => {
       }
     }
 
-    // Recalculate total price and total quantity for the cart
-    calculateCartTotal(cart);
-
     // Save the cart with updated items
     await cart.save();
+  
 
     // Respond with the updated cart
     res.status(201).json({ message: "Product added to cart", cart });
@@ -91,62 +89,6 @@ exports.addToCart = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
-//   try {
-//     const { userId, productId, quantity, size } = req.body;
-
-//     // Validate that the size is provided
-//     if (!size) {
-//       return res.status(400).json({ message: "Size is required" });
-//     }
-
-//     // Fetch the product to get its price
-//     const product = await Product.findById(productId);
-//     if (!product) {
-//       return res.status(404).json({ message: "Product not found" });
-//     }
-
-//     // Calculate the total price (product price * quantity)
-//     const totalPrice = product.price * quantity;
-
-//     // Find or create the user's cart
-//     let cart = await Cart.findOne({ user: userId }).populate('items.product');
-//     if (!cart) {
-//       cart = new Cart({ user: userId, items: [] });
-//     }
-
-//     // Check if the product with the same size already exists in the cart
-//     const itemIndex = cart.items.findIndex(
-//       (item) => item.product._id.toString() === productId && item.size === size
-//     );
-
-//     if (itemIndex === -1) {
-//       // If the product with that size is not in the cart, add it
-//       cart.items.push({ product: productId, size, quantity, totalPrice });
-//     } else {
-//       // If the product with that size already exists, update the quantity and total price
-//       cart.items[itemIndex].quantity += quantity;
-//       cart.items[itemIndex].totalPrice = totalPrice; // Update the total price
-//     }
-
-//     // Recalculate total quantity and price for the cart
-//     calculateCartTotal(cart);
-
-//     // Save the cart with updated items
-//     await cart.save();
-
-//     // Respond with the updated cart
-//     res.status(201).json({ message: "Product added to cart", cart });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
-
-
-
-
-
 
 
 ///---====Remove item or decrease quantity from cart---====////

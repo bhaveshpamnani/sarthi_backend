@@ -19,13 +19,11 @@ const cartSchema = new mongoose.Schema({
         required: true, 
         min: 1 
       },
-      size: {   // Size field added here
+      size: { 
         type: String,
-        required: true  // Ensure size is required
       },
-      color: {   // color field added here
-        type: String,
-        required: true  // Ensure size is required
+      color: {   
+        type: String, 
       },
       inCart: {
         type: Boolean,

@@ -83,37 +83,40 @@ exports.getWishlistStatus = async (req, res) => {
 
 
 // Get User Wishlist
-exports.getProductsByUser =  async (req, res) => {
+exports.getProductsByUser = async (req, res) => {
   const { userId } = req.params;
 
   try {
     // Find the wishlist by userId and populate the product details
     const wishlist = await Wishlist.findOne({ user: userId })
-      .populate('items.product', 'name discountPrice images brand discount ')  // Populate only needed fields from the Product model
+      .populate('items.product', 'name discountPrice images brand discount mrpPrice') // Include mrpPrice
       .exec();
 
     if (!wishlist) {
       return res.status(404).json({ message: 'Wishlist not found for this user' });
     }
 
+    // Log the populated wishlist for debugging
+    console.log('Populated Wishlist:', wishlist);
+
     // Return the populated wishlist
     res.status(200).json({
       wishlist: wishlist.items.map(item => ({
         productId: item.product._id,
         name: item.product.name,
-        brand:item.product.brand,
+        brand: item.product.brand,
         discount: item.product.discount,
         discountPrice: item.product.discountPrice,
-        mrpPrice: item.product.mrpPrice,
+        mrpPrice: item.product.mrpPrice, // Include mrpPrice
         image: item.product.images,
-        _id:item.product._id,
+        _id: item.product._id,
         addedAt: item.addedAt,
         isInWishlist: item.isInWishlist
-      })
-    )
+      }))
     });
   } catch (error) {
     console.error('Error fetching wishlist:', error);
     res.status(500).json({ message: 'An error occurred while fetching the wishlist' });
   }
 };
+
