@@ -21,8 +21,12 @@ function calculateCartTotal(cart) {
 ///---====Add or update item in the cart---====////
 exports.addToCart = async (req, res) => {
   try {
-    const { userId, productId, quantity, totalPrice, size, color } = req.body;
-
+    const { userId, productId, quantity, totalPrice, size, color,deliveryPrice } = req.body;
+    console.log("color ", color);
+    console.log(" size ",size);
+    
+    
+    
     // Validate quantity
     if (isNaN(quantity) || quantity <= 0) {
       return res.status(400).send({ message: "Invalid quantity" });
@@ -63,7 +67,8 @@ exports.addToCart = async (req, res) => {
         quantity, 
         totalPrice: parseFloat(totalPrice), 
         size, 
-        color 
+        color,
+        deliveryPrice 
       });
     } else {
       // If product with the same size and color already exists, update its quantity and totalPrice
@@ -71,6 +76,7 @@ exports.addToCart = async (req, res) => {
       cart.items[itemIndex].totalPrice = parseFloat(totalPrice); // Update totalPrice with the passed value
       cart.items[itemIndex].size = size;  // Update size
       cart.items[itemIndex].color = color;  // Update color
+      cart.deliveryPrice = deliveryPrice;  // Update deliveryPrice
 
       // Remove item if quantity is less than 1
       if (cart.items[itemIndex].quantity < 1) {
@@ -94,7 +100,7 @@ exports.addToCart = async (req, res) => {
 ///---====Remove item or decrease quantity from cart---====////
 exports.removeFromCart = async (req, res) => {
     try {
-        const { userId, productId  ,size,color, totalPrice} = req.body;
+        const { userId, productId  ,size,color, totalPrice,deliveryPrice} = req.body;
 
         // Find user's cart
         const cart = await Cart.findOne({ user: userId }).populate("items.product");
@@ -111,7 +117,8 @@ exports.removeFromCart = async (req, res) => {
         cart.totalQuantity -= 1;
         cart.totalPrice = totalPrice;
         cart.items[itemIndex].size = size;
-        cart.color = color;
+        cart.items[itemIndex].color = color;
+        cart.deliveryPrice = deliveryPrice;
         if (cart.items[itemIndex].quantity < 1) {
             cart.items.splice(itemIndex, 1);
         }
