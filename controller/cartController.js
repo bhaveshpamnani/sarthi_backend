@@ -22,8 +22,6 @@ function calculateCartTotal(cart) {
 exports.addToCart = async (req, res) => {
   try {
     const { userId, productId, quantity, totalPrice, size, color,deliveryPrice } = req.body;
-    console.log("color ", color);
-    console.log(" size ",size);
     
     
     
